@@ -1,0 +1,6 @@
+@ZenithAPI_HostAddress = http://localhost:5163
+
+GET {{ZenithAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
