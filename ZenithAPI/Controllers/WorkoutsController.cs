@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using ZenithAPI.Models;
 
 namespace ZenithAPI.Controllers
@@ -51,6 +52,44 @@ namespace ZenithAPI.Controllers
             if (workout == null) return NotFound();
             WorkoutsDataStore.Instance.Workouts.Remove(workout);
             return Ok();
+        }
+
+        [HttpPut("{workoutId}")]
+        public ActionResult UpdateWorkout(int workoutId, [FromBody] WorkoutCreateDto workout)
+        {
+            var workoutFromStore = WorkoutsDataStore.Instance.Workouts.Where(w => w.Id == workoutId).FirstOrDefault();
+            if(workoutFromStore == null) return NotFound();
+
+            workoutFromStore.Name = workout.Name;
+            return NoContent();
+        }
+
+        [HttpPatch("{workoutId}")]
+        public ActionResult PartiallyUpdateWorkout(int workoutId, JsonPatchDocument<WorkoutUpdateDto> patchDocument)
+        {
+            var workoutOriginal = WorkoutsDataStore.Instance.Workouts.Where(w => w.Id == workoutId).FirstOrDefault();
+            if (workoutOriginal == null) return NotFound();
+
+            var workoutToPatch = new WorkoutUpdateDto
+            {
+                Name = workoutOriginal.Name
+            };
+
+            patchDocument.ApplyTo(workoutToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(workoutToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            workoutOriginal.Name = workoutToPatch.Name;
+
+            return NoContent();
         }
     }
 }
