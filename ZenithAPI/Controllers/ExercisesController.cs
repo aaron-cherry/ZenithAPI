@@ -8,12 +8,20 @@ namespace ZenithAPI.Controllers
     [ApiController]
     public class ExercisesController : Controller
     {
+        private readonly ILogger<ExercisesController> _logger;
+
+        public ExercisesController(ILogger<ExercisesController> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<ExerciseDto>> GetExerices(int workoutId)
         {
             var workout = WorkoutsDataStore.Instance.Workouts.Where(w => w.Id == workoutId).FirstOrDefault();
             if (workout == null)
             {
+                _logger.LogInformation($"The workout with ID {workoutId} could not be found");
                 return NotFound();
             }
             return Ok(workout.Exercises);
@@ -33,8 +41,8 @@ namespace ZenithAPI.Controllers
         {
             var workout = SearchWorkout(workoutId);
             if (workout == null) return NotFound();
-
-            var maxExerciseId = workout.Exercises.Max(i => i.Id);
+            
+            var maxExerciseId = workout.Exercises.Count > 0 ? workout.Exercises.Max(i => i.Id) : 0;
 
             var finalExercise = new ExerciseDto()
             {
@@ -46,7 +54,7 @@ namespace ZenithAPI.Controllers
             return CreatedAtRoute("GetExercise",
                 new
                 {
-                    workoutId = workoutId,
+                    workoutId,
                     exerciseId = finalExercise
                 },
                 finalExercise);
