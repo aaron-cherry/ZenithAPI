@@ -18,13 +18,22 @@ namespace ZenithAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ExerciseDto>> GetExerices(int workoutId)
         {
-            var workout = WorkoutsDataStore.Instance.Workouts.Where(w => w.Id == workoutId).FirstOrDefault();
-            if (workout == null)
+            try
             {
-                _logger.LogInformation($"The workout with ID {workoutId} could not be found");
-                return NotFound();
+                var workout = WorkoutsDataStore.Instance.Workouts.Where(w => w.Id == workoutId).FirstOrDefault();
+                if (workout == null)
+                {
+                    _logger.LogInformation($"The workout with ID {workoutId} could not be found");
+                    return NotFound();
+                }
+
+                return Ok(workout.Exercises);
             }
-            return Ok(workout.Exercises);
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"An exception occurred when getting exercies from workout {workoutId}", ex);
+                return Problem();
+            }
         }
 
         [HttpGet("{exerciseId}", Name = "GetExercise")]
