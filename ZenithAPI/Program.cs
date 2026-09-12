@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using ZenithAPI.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +15,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
+builder.Services.AddDbContext<ZenithDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("ZenithDb")));
 
 var app = builder.Build();
 
