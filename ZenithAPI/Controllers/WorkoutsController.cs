@@ -8,6 +8,7 @@ namespace ZenithAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json", "application/xml")]
     public class WorkoutsController : ControllerBase
     {
         private readonly ZenithDbContext _context;
@@ -73,7 +74,7 @@ namespace ZenithAPI.Controllers
         }
 
         [HttpPut("{workoutId}")]
-        public ActionResult UpdateWorkout(int workoutId, [FromBody] WorkoutCreateDto workout)
+        public ActionResult UpdateWorkout(int workoutId, [FromBody] WorkoutUpdateDto workout)
         {
             var workoutFromDb = _context.Workouts.FirstOrDefault(w => w.Id == workoutId);
 

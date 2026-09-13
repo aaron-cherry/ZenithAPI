@@ -7,8 +7,9 @@ using ZenithAPI.Models;
 
 namespace ZenithAPI.Controllers
 {
-    [Route("api/workouts/{workoutId}/[controller]")]
     [ApiController]
+    [Route("api/workouts/{workoutId}/[controller]")]
+    [Produces("application/json", "application/xml")]
     public class ExercisesController : ControllerBase
     {
         private readonly ZenithDbContext _context;
