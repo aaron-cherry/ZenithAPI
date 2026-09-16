@@ -15,7 +15,16 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
-builder.Services.AddDbContext<ZenithDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("ZenithDb")));
+var connectionString = builder.Configuration.GetConnectionString("ZenithDb");
+
+//Build an Npgsql data source with dynamic JSON enabled
+var dataSourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(connectionString);
+dataSourceBuilder.EnableDynamicJson();
+var dataSource = dataSourceBuilder.Build();
+
+//Register the DbContext using the configured data source
+builder.Services.AddDbContext<ZenithDbContext>(options =>
+    options.UseNpgsql(dataSource));
 
 builder.Services.AddCors(options =>
 {

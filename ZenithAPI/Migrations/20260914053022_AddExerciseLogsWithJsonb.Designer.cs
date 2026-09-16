@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ZenithAPI.Data;
@@ -12,9 +13,11 @@ using ZenithAPI.Data;
 namespace ZenithAPI.Migrations
 {
     [DbContext(typeof(ZenithDbContext))]
-    partial class ZenithDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260914053022_AddExerciseLogsWithJsonb")]
+    partial class AddExerciseLogsWithJsonb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace ZenithAPI.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("ZenithAPI.Entities.ExerciseLog", b =>
+            modelBuilder.Entity("ZenithAPI.Entities.Exerciselog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,7 +117,7 @@ namespace ZenithAPI.Migrations
                     b.ToTable("WorkoutExercises");
                 });
 
-            modelBuilder.Entity("ZenithAPI.Entities.ExerciseLog", b =>
+            modelBuilder.Entity("ZenithAPI.Entities.Exerciselog", b =>
                 {
                     b.HasOne("ZenithAPI.Entities.WorkoutExercise", "WorkoutExercise")
                         .WithMany("Logs")
