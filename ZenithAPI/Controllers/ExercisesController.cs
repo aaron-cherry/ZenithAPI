@@ -21,6 +21,22 @@ namespace ZenithAPI.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [HttpGet("/api/exercises")]
+        public ActionResult<IEnumerable<ExerciseDto>> GetAllExercises()
+        {
+            var exercises = _context.Exercises
+                .OrderBy(e => e.Name)
+                .Select(e => new ExerciseDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Note = e.Note
+                })
+                .ToList();
+
+            return Ok(exercises);
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<ExerciseDto>> GetExercises(int workoutId)
         {
