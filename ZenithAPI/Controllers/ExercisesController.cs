@@ -37,7 +37,8 @@ namespace ZenithAPI.Controllers
                 .Select(we => new ExerciseDto
                 {
                     Id = we.Exercise.Id,
-                    Name = we.Exercise.Name
+                    Name = we.Exercise.Name,
+                    Note = we.Exercise.Note
                 })
                 .ToList();
 
@@ -57,7 +58,8 @@ namespace ZenithAPI.Controllers
             var exerciseDto = new ExerciseDto
             {
                 Id = workoutExercise.Exercise.Id,
-                Name = workoutExercise.Exercise.Name
+                Name = workoutExercise.Exercise.Name,
+                Note = workoutExercise.Exercise.Note
             };
 
             return Ok(exerciseDto);
@@ -131,6 +133,7 @@ namespace ZenithAPI.Controllers
             if (workoutExercise == null) return NotFound();
 
             workoutExercise.Exercise.Name = exercise.Name;
+            workoutExercise.Exercise.Note = exercise.Note;
             _context.SaveChanges();
 
             return NoContent();
